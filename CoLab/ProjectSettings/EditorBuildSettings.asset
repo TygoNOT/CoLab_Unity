@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Tygo/Level1_T.unity
+    guid: 2fb7f86f0108c4d4aad083dd31454387
   m_configObjects: {}
