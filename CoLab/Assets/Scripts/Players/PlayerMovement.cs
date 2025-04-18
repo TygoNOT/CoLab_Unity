@@ -7,17 +7,22 @@ public enum Team
     Red,
     Blue
 }
+
 public class PlayerMovement : NetworkBehaviour
 {
     [SerializeField] private float movementSpeed = 7f;
     [SerializeField] private float rotationSpeed = 500f;
     [SerializeField] private float positionRange = 5f;
-    public int currentPlayersTeamRed, currentPlayersTeamBlue = 0;
+
     private Animator animator;
-
-    public Team playerTeam = Team.None;
-
     public static PlayerMovement LocalInstance;
+
+    public NetworkVariable<Team> playerTeam = new NetworkVariable<Team>(
+        Team.None,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -25,10 +30,8 @@ public class PlayerMovement : NetworkBehaviour
 
     void Update()
     {
-        if (!IsOwner)
-        {
-            return;
-        }
+        if (!IsOwner) return;
+
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
@@ -46,11 +49,6 @@ public class PlayerMovement : NetworkBehaviour
         animator.SetFloat("run", movementDirection.magnitude);
     }
 
-    public void SelectTeam(Team team)
-    {
-        SelectTeamServerRpc((int)team);
-    }
-
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -60,47 +58,28 @@ public class PlayerMovement : NetworkBehaviour
 
         if (IsServer)
         {
-            UpdatePositionServerRpc();
+            transform.position = new Vector3(Random.Range(-positionRange, positionRange), 1, Random.Range(-positionRange, positionRange));
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-
-    private void UpdatePositionServerRpc()
+    public void SelectTeam(Team team)
     {
-        transform.position = new Vector3(Random.Range(positionRange, -positionRange), 1, Random.Range(positionRange, -positionRange));
-        transform.rotation = new Quaternion(0, 180, 0, 0);
+        SelectTeamServerRpc((int)team);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-
+    [ServerRpc]
     private void SelectTeamServerRpc(int teamInt)
     {
         Team team = (Team)teamInt;
-
-        if (team == Team.Red)
+        if (TeamManager.Instance != null)
         {
-            if (currentPlayersTeamRed < 2)
-            {
-                playerTeam = team;
-                currentPlayersTeamRed++;
-            }
-            else
-            {
-                Debug.Log("Team Red is full");
-            }
+            playerTeam.Value = team;
+            TeamManager.Instance.TryAddToTeamServerRpc(team);
+            Debug.Log($"Player assigned to {team}");
         }
-        else if (team == Team.Blue)
+        else
         {
-            if (currentPlayersTeamBlue < 2)
-            {
-                playerTeam = team;
-                currentPlayersTeamBlue++;
-            }
-            else
-            {
-                Debug.Log("Team Blue is full");
-            }
+            Debug.Log("Team full or TeamManager not found");
         }
     }
 }

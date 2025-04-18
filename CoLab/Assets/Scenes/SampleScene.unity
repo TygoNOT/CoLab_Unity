@@ -2057,6 +2057,7 @@ GameObject:
   - component: {fileID: 1896130755}
   - component: {fileID: 1896130759}
   - component: {fileID: 1896130754}
+  - component: {fileID: 1896130760}
   m_Layer: 5
   m_Name: Network UI
   m_TagString: Untagged
@@ -2181,9 +2182,25 @@ MonoBehaviour:
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
+  SpawnWithObservers: 0
+  DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
+--- !u!114 &1896130760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1896130753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c85727a39a5ad7845b5f994a44fb878b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  redCount:
+    m_InternalValue: 0
+  blueCount:
+    m_InternalValue: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
