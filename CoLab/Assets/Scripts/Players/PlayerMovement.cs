@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using Cinemachine;
 
 public enum Team
 {
@@ -10,9 +11,26 @@ public enum Team
 
 public class PlayerMovement : NetworkBehaviour
 {
-    [SerializeField] private float movementSpeed = 7f;
-    [SerializeField] private float rotationSpeed = 500f;
+    [Header("Attributes")]
+    [SerializeField][Range(0.0f, 0.5f)] float mouseSmoothTime = 0.03f;
+    [SerializeField] bool cursorLock = true;
+    [SerializeField] float mouseSensitivity = 3.5f;
+    [SerializeField] float Speed = 6.0f;
+    [SerializeField][Range(0.0f, 0.5f)] float moveSmoothTime = 0.3f;
+    [SerializeField] float gravity = -30f;
     [SerializeField] private float positionRange = 5f;
+    public float jumpHeight = 6f;
+    float velocityY;
+    bool isGrounded;
+    float cameraCap;
+    Vector2 currentMouseDelta, currentMouseDeltaVelocity, currentDir, currentDirVelocity, velocity;
+
+    [Header("Reference")]
+    CharacterController controller;
+    [SerializeField] LayerMask ground;
+    [SerializeField] Transform groundCheck;
+    [SerializeField] Transform playerCamera;
+    [SerializeField] private Camera cm;
 
     private Animator animator;
     public static PlayerMovement LocalInstance;
@@ -25,30 +43,63 @@ public class PlayerMovement : NetworkBehaviour
 
     void Start()
     {
+        controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+
+        if (cursorLock)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = true;
+        }
     }
 
     void Update()
     {
-        if (!IsOwner) return;
-
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-
-        Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
-        movementDirection.Normalize();
-
-        transform.Translate(movementDirection * movementSpeed * Time.deltaTime, Space.World);
-
-        if (movementDirection != Vector3.zero)
-        {
-            Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
-        }
-
-        animator.SetFloat("run", movementDirection.magnitude);
+        if (!IsOwner || !IsSpawned) return;
+        UpdateMouse();
+        UpdateMove();
     }
 
+    void UpdateMouse()
+    {
+        Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+
+        currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
+
+        cameraCap -= currentMouseDelta.y * mouseSensitivity;
+
+        cameraCap = Mathf.Clamp(cameraCap, -90.0f, 90.0f);
+
+        playerCamera.localEulerAngles = Vector3.right * cameraCap;
+
+        transform.Rotate(Vector3.up * currentMouseDelta.x * mouseSensitivity);
+    }
+
+    void UpdateMove()
+    {
+        isGrounded = Physics.CheckSphere(groundCheck.position, 0.2f, ground);
+
+        Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        targetDir.Normalize();
+
+        currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, moveSmoothTime);
+
+        velocityY += gravity * 2f * Time.deltaTime;
+
+        Vector3 velocity = (transform.forward * currentDir.y + transform.right * currentDir.x) * Speed + Vector3.up * velocityY;
+
+        controller.Move(velocity * Time.deltaTime);
+
+        if (isGrounded && Input.GetButtonDown("Jump"))
+        {
+            velocityY = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+
+        if (isGrounded! && controller.velocity.y < -1f)
+        {
+            velocityY = -8f;
+        }
+    }
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -56,9 +107,24 @@ public class PlayerMovement : NetworkBehaviour
             LocalInstance = this;
         }
 
+        SetupCamera(IsOwner);
+
+
         if (IsServer)
         {
             transform.position = new Vector3(Random.Range(-positionRange, positionRange), 1, Random.Range(-positionRange, positionRange));
+        }
+    }
+    private void SetupCamera(bool isOwner)
+    {
+        if (cm == null) return;
+
+        cm.enabled = isOwner;
+
+        AudioListener listener = cm.GetComponent<AudioListener>();
+        if (listener != null)
+        {
+            listener.enabled = isOwner;
         }
     }
 
