@@ -12,6 +12,11 @@ public class GameManager : NetworkBehaviour
 
     public GameObject objectToReveal;
 
+    [Header("Teleport Settings")]
+    public bool teleportOnCorrectSequence = true; 
+    public Transform spawnCenter; 
+    public float spawnRadius = 5f;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -79,18 +84,52 @@ public class GameManager : NetworkBehaviour
     {
         if (buttonIndex == buttonSequence[currentButtonIndex])
         {
-            playerSequence.Add(buttonIndex);  
-            currentButtonIndex++; 
+            playerSequence.Add(buttonIndex);
+            currentButtonIndex++;
+
             if (playerSequence.Count == buttonSequence.Count)
             {
-                objectToReveal.SetActive(true);  
-                return true;  
+                objectToReveal.SetActive(true);
+
+                if (teleportOnCorrectSequence && IsServer)
+                {
+                    TeleportAllPlayersServerRpc();
+                }
+
+                return true;
             }
+
             return true;
         }
         else
         {
-            return false; 
+            return false;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TeleportAllPlayersServerRpc()
+    {
+        foreach (var clientPair in NetworkManager.ConnectedClients)
+        {
+            var clientId = clientPair.Key;
+            var playerObject = clientPair.Value.PlayerObject;
+
+            if (playerObject != null)
+            {
+                var controller = playerObject.GetComponent<CharacterController>();
+                if (controller != null)
+                    controller.enabled = false;
+
+                Vector3 teleportPosition = spawnCenter != null
+                    ? spawnCenter.position + new Vector3(Random.Range(-spawnRadius, spawnRadius), 0f, Random.Range(-spawnRadius, spawnRadius))
+                    : GetSpawnPosition(); 
+
+                playerObject.transform.position = teleportPosition;
+
+                if (controller != null)
+                    controller.enabled = true;
+            }
         }
     }
 
