@@ -7,23 +7,24 @@ using TMPro;
 
 public class NetworkUi : NetworkBehaviour
 {
-    [SerializeField] private Button hostButton;
-    [SerializeField] private Button clientButton;
     [SerializeField] private TextMeshProUGUI playersCountText;
+    [SerializeField] private GameObject ButtonHolder;
+    [SerializeField] private GameObject Players;
 
     private NetworkVariable<int> playersNumber = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
 
-    private void Awake()
-    {
-        hostButton.onClick.AddListener(() =>
-        {
-            NetworkManager.Singleton.StartHost();
-        });
 
-        clientButton.onClick.AddListener(() =>
-        {
-            NetworkManager.Singleton.StartClient();
-        });
+    public void HostButtonClick()
+    {
+        NetworkManager.Singleton.StartHost();
+        ButtonHolder.SetActive(false);
+        Players.SetActive(true);
+    }
+    public void ClientButtonClick()
+    {
+        NetworkManager.Singleton.StartClient();
+        ButtonHolder.SetActive(false);
+        Players.SetActive(true);
     }
 
     private void Update()

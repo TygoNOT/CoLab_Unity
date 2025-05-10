@@ -24,6 +24,7 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float crouchSpeed = 3f;
     [SerializeField] private float climbSpeed = 4f;
     [SerializeField] private float crouchJumpHeight = 3f;
+
     private bool isOnLadder = false;
     private bool isCrouching = false;
     public float jumpHeight = 7f;
@@ -42,6 +43,10 @@ public class PlayerMovement : NetworkBehaviour
     private Animator animator;
     public static PlayerMovement LocalInstance;
 
+    [Header("Audio")]
+    [SerializeField] AudioClip walkSound;  
+    private AudioSource audioSource;       
+
     public NetworkVariable<Team> playerTeam = new NetworkVariable<Team>(
         Team.None,
         NetworkVariableReadPermission.Everyone,
@@ -52,7 +57,12 @@ public class PlayerMovement : NetworkBehaviour
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>(); 
+        }
         if (cursorLock)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -98,6 +108,14 @@ public class PlayerMovement : NetworkBehaviour
         Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         targetDir.Normalize();
 
+        if (targetDir.magnitude > 0 && isGrounded && !audioSource.isPlaying)
+        {
+            PlayWalkSound();
+        }
+        else if (targetDir.magnitude == 0 || !isGrounded)
+        {
+            StopWalkSound();
+        }
         currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, moveSmoothTime);
 
         velocityY += gravity * 2f * Time.deltaTime;
@@ -193,6 +211,24 @@ public class PlayerMovement : NetworkBehaviour
         if (other.CompareTag("Ladder"))
         {
             isOnLadder = false;
+        }
+    }
+
+    void PlayWalkSound()
+    {
+        if (walkSound != null)
+        {
+            audioSource.clip = walkSound;
+            audioSource.loop = true;  
+            audioSource.Play();
+        }
+    }
+
+    void StopWalkSound()
+    {
+        if (audioSource.isPlaying && audioSource.clip == walkSound)
+        {
+            audioSource.Stop();
         }
     }
 }

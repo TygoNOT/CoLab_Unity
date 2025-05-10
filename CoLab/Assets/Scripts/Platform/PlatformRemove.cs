@@ -4,6 +4,7 @@ using Unity.Mathematics;
 
 public class PlatformRemove : MonoBehaviour
 {
+    /*
     GameObject platformTop = new GameObject();
     GameObject platformDown = new GameObject();
     public bool playerInRange = false;
@@ -79,5 +80,5 @@ public class PlatformRemove : MonoBehaviour
        
 
     }
-
+    */
 }

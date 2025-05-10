@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1847185404
+  GlobalObjectIdHash: 1593664664
   InScenePlacedSourceGlobalObjectIdHash: 1847185404
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -273,6 +273,7 @@ MonoBehaviour:
   standingHeight: 2
   crouchSpeed: 3
   climbSpeed: 4
+  crouchJumpHeight: 3
   jumpHeight: 7
   ground:
     serializedVersion: 2
@@ -280,6 +281,8 @@ MonoBehaviour:
   groundCheck: {fileID: 569461392828056641}
   playerCamera: {fileID: 1313411844193842930}
   cm: {fileID: 8912902362448400623}
+  walkSound: {fileID: 8300000, guid: 5f98259623bc65a46968d19d1a051919, type: 3}
+  jumpSound: {fileID: 8300000, guid: a68911a01917ab74e8843b5db6ac574c, type: 3}
   playerTeam:
     m_InternalValue: 0
 --- !u!114 &247153099200871262
