@@ -19,7 +19,14 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField][Range(0.0f, 0.5f)] float moveSmoothTime = 0.3f;
     [SerializeField] float gravity = -30f;
     [SerializeField] private float positionRange = 5f;
-    public float jumpHeight = 6f;
+    [SerializeField] private float crouchHeight = 1f;
+    [SerializeField] private float standingHeight = 2f;
+    [SerializeField] private float crouchSpeed = 3f;
+    [SerializeField] private float climbSpeed = 4f;
+    [SerializeField] private float crouchJumpHeight = 3f;
+    private bool isOnLadder = false;
+    private bool isCrouching = false;
+    public float jumpHeight = 7f;
     float velocityY;
     bool isGrounded;
     float cameraCap;
@@ -58,6 +65,7 @@ public class PlayerMovement : NetworkBehaviour
         if (!IsOwner || !IsSpawned) return;
         UpdateMouse();
         UpdateMove();
+        HandleCrouch();
     }
 
     void UpdateMouse()
@@ -77,6 +85,14 @@ public class PlayerMovement : NetworkBehaviour
 
     void UpdateMove()
     {
+        if (isOnLadder)
+        {
+            float verticalInput = Input.GetAxisRaw("Vertical");
+            Vector3 climbVelocity = new Vector3(0f, verticalInput * climbSpeed, 0f);
+            controller.Move(climbVelocity * Time.deltaTime);
+            return;
+        }
+
         isGrounded = Physics.CheckSphere(groundCheck.position, 0.2f, ground);
 
         Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
@@ -92,7 +108,8 @@ public class PlayerMovement : NetworkBehaviour
 
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            velocityY = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            float jumpPower = isCrouching ? crouchJumpHeight : jumpHeight;
+            velocityY = Mathf.Sqrt(jumpPower * -2f * gravity);
         }
 
         if (isGrounded! && controller.velocity.y < -1f)
@@ -146,6 +163,36 @@ public class PlayerMovement : NetworkBehaviour
         else
         {
             Debug.Log("Team full or TeamManager not found");
+        }
+    }
+    void HandleCrouch()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            isCrouching = !isCrouching;
+            controller.height = isCrouching ? crouchHeight : standingHeight;
+            Speed = isCrouching ? crouchSpeed : 6f;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!IsOwner) return;
+
+        if (other.CompareTag("Ladder"))
+        {
+            isOnLadder = true;
+            velocityY = 0f;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!IsOwner) return;
+
+        if (other.CompareTag("Ladder"))
+        {
+            isOnLadder = false;
         }
     }
 }
