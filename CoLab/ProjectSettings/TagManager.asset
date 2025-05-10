@@ -8,6 +8,7 @@ TagManager:
   - ButtonTop
   - BottomButton
   - TrueButton
+  - Ladder
   layers:
   - Default
   - TransparentFX
