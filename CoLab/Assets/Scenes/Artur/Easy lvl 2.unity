@@ -1502,7 +1502,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &367821777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1738,10 +1738,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!65 &464867698
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2091,9 +2087,9 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 127.0.0.1
+    Address: 26.116.245.55
     Port: 7777
-    ServerListenAddress: 127.0.0.1
+    ServerListenAddress: 26.116.245.55
   DebugSimulator:
     PacketDelayMS: 0
     PacketJitterMS: 0
@@ -2866,10 +2862,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!65 &754203108
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3779,10 +3771,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!65 &981719163
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4275,10 +4263,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!65 &1116734335
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6164,10 +6148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!65 &1549833768
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6302,10 +6282,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!65 &1587669202
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6688,10 +6664,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!65 &1688541286
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7064,10 +7036,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!65 &1807043257
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7340,10 +7308,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!65 &1857901733
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7962,10 +7926,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!114 &2032483340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8019,10 +7979,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6539e61a2d6f14589f4767128edb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  symbols: []
-  symbolMeshes:
-  - {fileID: 0}
-  meshFilter: {fileID: 0}
 --- !u!65 &2069379109
 BoxCollider:
   m_ObjectHideFlags: 0
