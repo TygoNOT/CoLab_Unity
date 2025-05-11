@@ -7998,9 +7998,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5226df2de7ac6b646878cc89f42d036a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hostButton: {fileID: 1339312494}
-  clientButton: {fileID: 1150534474}
   playersCountText: {fileID: 556100615}
+  ButtonHolder: {fileID: 0}
+  Players: {fileID: 0}
 --- !u!114 &1896130755
 MonoBehaviour:
   m_ObjectHideFlags: 0

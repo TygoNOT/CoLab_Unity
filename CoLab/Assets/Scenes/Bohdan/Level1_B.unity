@@ -4135,7 +4135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonSequence: 
   playerSequence: 
-  objectToReveal: {fileID: 0}
+  objectToReveal: {fileID: 786138373}
   teleportOnCorrectSequence: 0
   spawnCenter: {fileID: 0}
   spawnRadius: 5
