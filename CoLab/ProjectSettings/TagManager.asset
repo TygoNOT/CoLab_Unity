@@ -5,6 +5,16 @@ TagManager:
   serializedVersion: 2
   tags:
   - OldDoor
+  - Ground
+  - Button
+  - ButtonTop
+  - BottomButton
+  - TrueButton
+  - Bullet
+  - Ladder
+  - DoorButton
+  - SymbolRotation
+  - SequenceCheckButton
   layers:
   - Default
   - TransparentFX

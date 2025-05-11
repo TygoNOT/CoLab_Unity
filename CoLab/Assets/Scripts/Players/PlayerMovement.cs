@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using Cinemachine;
+using System.Collections;
 
 public enum Team
 {
@@ -19,7 +20,15 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField][Range(0.0f, 0.5f)] float moveSmoothTime = 0.3f;
     [SerializeField] float gravity = -30f;
     [SerializeField] private float positionRange = 5f;
-    public float jumpHeight = 6f;
+    [SerializeField] private float crouchHeight = 1f;
+    [SerializeField] private float standingHeight = 2f;
+    [SerializeField] private float crouchSpeed = 3f;
+    [SerializeField] private float climbSpeed = 4f;
+    [SerializeField] private float crouchJumpHeight = 3f;
+
+    private bool isOnLadder = false;
+    private bool isCrouching = false;
+    public float jumpHeight = 7f;
     float velocityY;
     bool isGrounded;
     float cameraCap;
@@ -34,7 +43,11 @@ public class PlayerMovement : NetworkBehaviour
 
     private Animator animator;
     public static PlayerMovement LocalInstance;
+    public bool IsStunned { get; private set; } = false;
 
+    [Header("Audio")]
+    [SerializeField] AudioClip walkSound;
+    private AudioSource audioSource;    
     public NetworkVariable<Team> playerTeam = new NetworkVariable<Team>(
         Team.None,
         NetworkVariableReadPermission.Everyone,
@@ -45,7 +58,13 @@ public class PlayerMovement : NetworkBehaviour
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource = gameObject.AddComponent<AudioSource>(); 
+        }
         if (cursorLock)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -58,6 +77,7 @@ public class PlayerMovement : NetworkBehaviour
         if (!IsOwner || !IsSpawned) return;
         UpdateMouse();
         UpdateMove();
+        HandleCrouch();
     }
 
     void UpdateMouse()
@@ -77,11 +97,27 @@ public class PlayerMovement : NetworkBehaviour
 
     void UpdateMove()
     {
+        if (isOnLadder)
+        {
+            float verticalInput = Input.GetAxisRaw("Vertical");
+            Vector3 climbVelocity = new Vector3(0f, verticalInput * climbSpeed, 0f);
+            controller.Move(climbVelocity * Time.deltaTime);
+            return;
+        }
+
         isGrounded = Physics.CheckSphere(groundCheck.position, 0.2f, ground);
 
         Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         targetDir.Normalize();
 
+        if (targetDir.magnitude > 0 && isGrounded && !audioSource.isPlaying)
+        {
+            PlayWalkSound();
+        }
+        else if (targetDir.magnitude == 0 || !isGrounded)
+        {
+            StopWalkSound();
+        }
         currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, moveSmoothTime);
 
         velocityY += gravity * 2f * Time.deltaTime;
@@ -92,7 +128,8 @@ public class PlayerMovement : NetworkBehaviour
 
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            velocityY = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            float jumpPower = isCrouching ? crouchJumpHeight : jumpHeight;
+            velocityY = Mathf.Sqrt(jumpPower * -2f * gravity);
         }
 
         if (isGrounded! && controller.velocity.y < -1f)
@@ -148,4 +185,79 @@ public class PlayerMovement : NetworkBehaviour
             Debug.Log("Team full or TeamManager not found");
         }
     }
+    void HandleCrouch()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            isCrouching = !isCrouching;
+            controller.height = isCrouching ? crouchHeight : standingHeight;
+            Speed = isCrouching ? crouchSpeed : 6f;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!IsOwner) return;
+
+        if (other.CompareTag("Ladder"))
+        {
+            isOnLadder = true;
+            velocityY = 0f;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!IsOwner) return;
+
+        if (other.CompareTag("Ladder"))
+        {
+            isOnLadder = false;
+        }
+    }
+
+    void PlayWalkSound()
+    {
+        if (walkSound != null)
+        {
+            audioSource.clip = walkSound;
+            audioSource.loop = true;
+            audioSource.loop = true;  
+            audioSource.Play();
+        }
+    }
+
+    void StopWalkSound()
+    {
+        if (audioSource.isPlaying && audioSource.clip == walkSound)
+        {
+            audioSource.Stop();
+        }
+    }
+
+    public void ApplyStun(float duration)
+    {
+        if (!IsStunned)
+            StartCoroutine(StunCoroutine(duration));
+    }
+
+    private IEnumerator StunCoroutine(float duration)
+    {
+        IsStunned = true;
+        controller.enabled = false;
+        yield return new WaitForSeconds(duration);
+
+        controller.enabled = true;
+        IsStunned = false;
+    }
+
+    [ClientRpc]
+    public void ApplyStunClientRpc(float duration)
+    {
+        if (IsOwner)
+        {
+            ApplyStun(duration);
+        }
+    }
+
 }
