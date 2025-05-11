@@ -46,7 +46,8 @@ public class PlayerMovement : NetworkBehaviour
     [Header("Audio")]
     [SerializeField] AudioClip walkSound;
     private AudioSource audioSource;
-
+    [SerializeField] AudioClip walkSound;  
+    private AudioSource audioSource;       
     public NetworkVariable<Team> playerTeam = new NetworkVariable<Team>(
         Team.None,
         NetworkVariableReadPermission.Everyone,
@@ -62,6 +63,7 @@ public class PlayerMovement : NetworkBehaviour
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource = gameObject.AddComponent<AudioSource>(); 
         }
         if (cursorLock)
         {
@@ -220,6 +222,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             audioSource.clip = walkSound;
             audioSource.loop = true;
+            audioSource.loop = true;  
             audioSource.Play();
         }
     }

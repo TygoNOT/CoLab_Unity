@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Button
+  - ButtonTop
+  - BottomButton
+  - TrueButton
   layers:
   - Default
   - TransparentFX

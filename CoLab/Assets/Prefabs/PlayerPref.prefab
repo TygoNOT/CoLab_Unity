@@ -266,6 +266,8 @@ MonoBehaviour:
   cursorLock: 1
   mouseSensitivity: 3.5
   Speed: 20
+  Speed: 7
+
   moveSmoothTime: 0
   gravity: -30
   positionRange: 5
@@ -275,6 +277,7 @@ MonoBehaviour:
   climbSpeed: 4
   crouchJumpHeight: 3
   jumpHeight: 6
+  jumpHeight: 7
   ground:
     serializedVersion: 2
     m_Bits: 64
@@ -282,6 +285,8 @@ MonoBehaviour:
   playerCamera: {fileID: 1313411844193842930}
   cm: {fileID: 8912902362448400623}
   walkSound: {fileID: 0}
+  walkSound: {fileID: 8300000, guid: 5f98259623bc65a46968d19d1a051919, type: 3}
+  jumpSound: {fileID: 8300000, guid: a68911a01917ab74e8843b5db6ac574c, type: 3}
   playerTeam:
     m_InternalValue: 0
 --- !u!114 &247153099200871262
