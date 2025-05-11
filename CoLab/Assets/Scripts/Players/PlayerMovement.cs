@@ -151,6 +151,10 @@ public class PlayerMovement : NetworkBehaviour
         {
             transform.position = new Vector3(Random.Range(-positionRange, positionRange), 1, Random.Range(-positionRange, positionRange));
         }
+        if (IsClient)
+        {
+            transform.position = new Vector3(Random.Range(-positionRange, positionRange), 1, Random.Range(-positionRange, positionRange));
+        }
     }
     private void SetupCamera(bool isOwner)
     {

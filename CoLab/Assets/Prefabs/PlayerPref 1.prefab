@@ -274,7 +274,7 @@ MonoBehaviour:
   crouchSpeed: 3
   climbSpeed: 4
   crouchJumpHeight: 3
-  jumpHeight: 7
+  jumpHeight: 8
   ground:
     serializedVersion: 2
     m_Bits: 64
