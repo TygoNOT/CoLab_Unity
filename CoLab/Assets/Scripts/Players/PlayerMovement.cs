@@ -45,9 +45,7 @@ public class PlayerMovement : NetworkBehaviour
 
     [Header("Audio")]
     [SerializeField] AudioClip walkSound;
-    private AudioSource audioSource;
-    [SerializeField] AudioClip walkSound;  
-    private AudioSource audioSource;       
+    private AudioSource audioSource;    
     public NetworkVariable<Team> playerTeam = new NetworkVariable<Team>(
         Team.None,
         NetworkVariableReadPermission.Everyone,

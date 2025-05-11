@@ -12,23 +12,6 @@ public class NetworkUi : NetworkBehaviour
     [SerializeField] private GameObject Players;
 
     private NetworkVariable<int> playersNumber = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
-
-    private void Awake()
-    {
-        hostButton.onClick.AddListener(() =>
-        {
-            NetworkManager.Singleton.StartHost();
-            hostButton.enabled = false;
-            clientButton.enabled = false;
-        });
-
-        clientButton.onClick.AddListener(() =>
-        {
-            NetworkManager.Singleton.StartClient();
-            clientButton.enabled = false;
-            hostButton.enabled = false;
-        });
-
     public void HostButtonClick()
     {
         NetworkManager.Singleton.StartHost();
