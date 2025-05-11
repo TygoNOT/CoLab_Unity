@@ -112,7 +112,7 @@ GameObject:
   - component: {fileID: 6194499055534167472}
   m_Layer: 0
   m_Name: PlayerPref
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1593664664
+  GlobalObjectIdHash: 1847185404
   InScenePlacedSourceGlobalObjectIdHash: 1847185404
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -265,10 +265,15 @@ MonoBehaviour:
   mouseSmoothTime: 0.03
   cursorLock: 1
   mouseSensitivity: 3.5
-  Speed: 6
-  moveSmoothTime: 0.3
+  Speed: 20
+  moveSmoothTime: 0
   gravity: -30
   positionRange: 5
+  crouchHeight: 1
+  standingHeight: 2
+  crouchSpeed: 3
+  climbSpeed: 4
+  crouchJumpHeight: 3
   jumpHeight: 6
   ground:
     serializedVersion: 2
@@ -276,6 +281,7 @@ MonoBehaviour:
   groundCheck: {fileID: 569461392828056641}
   playerCamera: {fileID: 1313411844193842930}
   cm: {fileID: 8912902362448400623}
+  walkSound: {fileID: 0}
   playerTeam:
     m_InternalValue: 0
 --- !u!114 &247153099200871262

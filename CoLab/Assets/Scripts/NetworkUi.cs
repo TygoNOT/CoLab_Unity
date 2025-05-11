@@ -18,11 +18,15 @@ public class NetworkUi : NetworkBehaviour
         hostButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartHost();
+            hostButton.enabled = false;
+            clientButton.enabled = false;
         });
 
         clientButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartClient();
+            clientButton.enabled = false;
+            hostButton.enabled = false;
         });
     }
 
