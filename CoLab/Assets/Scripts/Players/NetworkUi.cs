@@ -11,41 +11,25 @@ public class NetworkUi : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI playersCountText;
     [SerializeField] private GameObject ButtonHolder;
     [SerializeField] private GameObject Players;
-    [SerializeField] private TMP_InputField ipInputField;
 
     private NetworkVariable<int> playersNumber = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
-    void Start()
-    {
-        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-    }
 
-    private void OnClientConnected(ulong clientId)
-    {
-        Debug.Log($"Client connected: {clientId}");
-    }
+    // IP-адрес хоста в сети Radmin
+    private string hostIp = "26.187.193.230";
+    private ushort port = 7777;
 
-    private void OnClientDisconnected(ulong clientId)
-    {
-        Debug.Log($"Client disconnected: {clientId}");
-    }
     public void HostButtonClick()
     {
         NetworkManager.Singleton.StartHost();
         ButtonHolder.SetActive(false);
         Players.SetActive(true);
     }
+
     public void ClientButtonClick()
     {
-        string ipAddress = ipInputField.text.Trim();
-
-        if (string.IsNullOrEmpty(ipAddress))
-        {
-            ipAddress = "127.0.0.1";
-        }
-
+        // Устанавливаем адрес подключения вручную
         UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        transport.SetConnectionData(ipAddress, (ushort)7777);
+        transport.SetConnectionData(hostIp, port);
 
         NetworkManager.Singleton.StartClient();
         ButtonHolder.SetActive(false);
@@ -55,10 +39,10 @@ public class NetworkUi : NetworkBehaviour
     private void Update()
     {
         playersCountText.text = "Players: " + playersNumber.Value.ToString();
+
         if (!IsServer)
-        {
             return;
-        }
+
         playersNumber.Value = NetworkManager.Singleton.ConnectedClients.Count;
     }
 }

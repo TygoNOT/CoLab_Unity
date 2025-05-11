@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e4f3c8181369a49bdc1eaebbd24ebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextSceneName: Easy lvl 2
+  nextSceneName: Level2_W
   playerCountText: {fileID: 0}
 --- !u!114 &35337345
 MonoBehaviour:
