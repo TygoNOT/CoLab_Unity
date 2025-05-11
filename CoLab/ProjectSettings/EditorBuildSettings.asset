@@ -5,7 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/Artur/Multiplayer v2.unity
+    guid: b6d5691b8e72d2d4c998a7fbcb2998c4
   - enabled: 1
+    path: Assets/Scenes/Artur/Easy lvl 1.unity
+    guid: f2920daf73903034293473ab81e35c85
+  - enabled: 1
+    path: Assets/Scenes/Artur/Easy lvl 2.unity
+    guid: 02f2510358ce4244aa49bcdb1be7b168
+  - enabled: 1
+    path: Assets/Scenes/Artur/Easy lvl 3.unity
+    guid: fa7397c16858faa45b2c2ab1e830a1fe
     path: Assets/Scenes/Hub/Hub.unity
     guid: 065c52df92e9b014491607bcad349850
   - enabled: 1

@@ -13,6 +13,21 @@ public class NetworkUi : NetworkBehaviour
 
     private NetworkVariable<int> playersNumber = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
 
+    private void Awake()
+    {
+        hostButton.onClick.AddListener(() =>
+        {
+            NetworkManager.Singleton.StartHost();
+            hostButton.enabled = false;
+            clientButton.enabled = false;
+        });
+
+        clientButton.onClick.AddListener(() =>
+        {
+            NetworkManager.Singleton.StartClient();
+            clientButton.enabled = false;
+            hostButton.enabled = false;
+        });
 
     public void HostButtonClick()
     {

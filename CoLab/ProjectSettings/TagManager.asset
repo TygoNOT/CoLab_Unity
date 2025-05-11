@@ -4,11 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Ground
   - Button
   - ButtonTop
   - BottomButton
   - TrueButton
-  - Ladder
   layers:
   - Default
   - TransparentFX
