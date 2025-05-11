@@ -4,6 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - OldDoor
   - Ground
   - Button
   - ButtonTop
@@ -22,7 +23,7 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
+  - Buttons
   - 
   - 
   - 
