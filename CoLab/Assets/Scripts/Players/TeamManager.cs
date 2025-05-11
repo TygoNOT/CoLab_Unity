@@ -9,10 +9,8 @@ public class TeamManager : NetworkBehaviour
 
     public void Awake()
     {
-        if (Instance == null)
+        if (Instance != null)
             Instance = this;
-        else
-            Destroy(gameObject);
     }
 
     [ServerRpc]

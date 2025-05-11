@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using Cinemachine;
+using System.Collections;
 
 public enum Team
 {
@@ -42,6 +43,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private Animator animator;
     public static PlayerMovement LocalInstance;
+    public bool IsStunned { get; private set; } = false;
 
     [Header("Audio")]
     [SerializeField] AudioClip walkSound;
@@ -232,4 +234,30 @@ public class PlayerMovement : NetworkBehaviour
             audioSource.Stop();
         }
     }
+
+    public void ApplyStun(float duration)
+    {
+        if (!IsStunned)
+            StartCoroutine(StunCoroutine(duration));
+    }
+
+    private IEnumerator StunCoroutine(float duration)
+    {
+        IsStunned = true;
+        controller.enabled = false;
+        yield return new WaitForSeconds(duration);
+
+        controller.enabled = true;
+        IsStunned = false;
+    }
+
+    [ClientRpc]
+    public void ApplyStunClientRpc(float duration)
+    {
+        if (IsOwner)
+        {
+            ApplyStun(duration);
+        }
+    }
+
 }

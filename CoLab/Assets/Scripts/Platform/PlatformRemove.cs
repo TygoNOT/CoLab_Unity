@@ -1,29 +1,51 @@
 using UnityEngine;
-using System;
+using Unity.Netcode;
 using Unity.Mathematics;
 
-public class PlatformRemove : MonoBehaviour
+public class PlatformRemove : NetworkBehaviour
 {
-    /*
-    GameObject platformTop = new GameObject();
-    GameObject platformDown = new GameObject();
+    private GameObject platformTop;
+    private GameObject platformDown;
     public bool playerInRange = false;
-    GameObject currentNearbyButton = new GameObject();
+    private GameObject currentNearbyButton;
+    private SymbolsManager symbolsManager;
+    public Material[] allMaterials;
+    public AudioClip pressSound;
+    private AudioSource audioSource;
+    public AudioClip incorrectPressSound;
     ButtonList buttonList;
-    CharacterStun characterStun;
-    
+    public Transform buttonCube;
+    private GameObject playerInstance;
+    [SerializeField]
+    private GameObject finish;
+    [SerializeField]
+    private GameObject invisibleWall;
+    [SerializeField]
+    private GameObject door1;
+    [SerializeField]
+    private GameObject door2;
     public void Start()
     {
-         platformTop = GameObject.Find("ButtonPlane1");
-         platformDown = GameObject.Find("ButtonPlane2");
-         buttonList = GameObject.Find("Buttons").GetComponent<ButtonList>();
-         
-         
+        audioSource = buttonCube.GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = buttonCube.gameObject.AddComponent<AudioSource>();
+        }
 
+        if (pressSound != null)
+        {
+            audioSource.clip = pressSound;
+        }
+        platformTop = GameObject.Find("ButtonPlane1");
+        platformDown = GameObject.Find("ButtonPlane2");
+
+        if (GameObject.FindObjectOfType<SymbolsManager>() != null)
+        {
+            symbolsManager = GameObject.FindObjectOfType<SymbolsManager>();
+            allMaterials = symbolsManager.GetMaterials();
+        }
+        
     }
-
-  
-    
     public void TopPLatformRemoveOnButtonPressed()
     {
         Destroy(platformTop);
@@ -32,11 +54,16 @@ public class PlatformRemove : MonoBehaviour
     {
         Destroy(platformDown);
     }
-
     public void Update()
     {
         if (playerInRange && Input.GetKeyDown(KeyCode.E) && currentNearbyButton.tag == "ButtonTop")
         {
+            if (pressSound != null)
+            {
+                audioSource.clip = pressSound;
+                audioSource.Play();
+            }
+            buttonList = GameObject.Find("Buttons").GetComponent<ButtonList>();
             TopPLatformRemoveOnButtonPressed();
             System.Random random = new System.Random();
             int trueButtonNumber = random.Next(0, buttonList.knopk.Length);
@@ -47,38 +74,96 @@ public class PlatformRemove : MonoBehaviour
 
         if (playerInRange && Input.GetKeyDown(KeyCode.E) && currentNearbyButton.tag == "BottomButton")
         {
+            if (pressSound != null)
+            {
+                audioSource.clip = pressSound;
+                audioSource.Play();
+            }
             DownPLatformRemoveOnButtonPressed();
         }
 
         if (playerInRange && Input.GetKeyDown(KeyCode.E) && currentNearbyButton.tag == "TrueButton")
         {
-            
-            //Win
+            if (pressSound != null)
+            {
+                audioSource.clip = pressSound;
+                audioSource.Play();
+            }
+            finish.SetActive(true);
         }
 
         if (playerInRange && Input.GetKeyDown(KeyCode.E) && currentNearbyButton.tag == "Button")
         {
-            GetComponent<CharacterStun>().ApplyStun(2f);
-
+            if (incorrectPressSound != null)
+            {
+                audioSource.clip = incorrectPressSound;
+                audioSource.volume = 0.2f;
+                audioSource.Play();
+            }
+            playerInstance.GetComponent<NetworkObject>().GetComponent<PlayerMovement>().ApplyStunClientRpc(1f);
         }
 
-    }
+        if (playerInRange && Input.GetKeyDown(KeyCode.E) && currentNearbyButton.tag == "DoorButton")
+        {
+            if(invisibleWall!=null) invisibleWall.SetActive(false);
+            if (pressSound != null)
+            {
+                audioSource.clip = pressSound;
+                audioSource.Play();
+            }
+        }
+        if (playerInRange && Input.GetKeyDown(KeyCode.E) && currentNearbyButton.tag == "SymbolRotation")
+        {
+            if (pressSound != null)
+            {
+                audioSource.clip = pressSound;
+                audioSource.Play();
+            }
+            SymbolCube cube = currentNearbyButton.GetComponentInParent<SymbolCube>();
+            if (cube == null) cube = currentNearbyButton.GetComponentInChildren<SymbolCube>();
 
+            if (cube != null)
+            {
+                cube.NextSymbol();
+            }
+        }
+        if (playerInRange && Input.GetKeyDown(KeyCode.E) && currentNearbyButton.tag == "SequenceCheckButton")
+        {
+            SymbolsManager symbolsManager = GameObject.FindObjectOfType<SymbolsManager>();
+            if (!symbolsManager.IsSequenceCorrect())
+            {
+                audioSource.clip = incorrectPressSound;
+                audioSource.Play();
+            }
+            if (pressSound != null && symbolsManager.IsSequenceCorrect())
+            {
+                audioSource.clip = pressSound;
+                audioSource.Play();
+            }
+            if (symbolsManager != null && symbolsManager.IsSequenceCorrect())
+            {
+                door1.SetActive(false);
+                door2.SetActive(false);
+            }
+            else
+            {
+                Debug.Log("Неправильная последовательность!");
+            }
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") ) playerInRange = true;
         currentNearbyButton = gameObject;
+        playerInstance = other.gameObject;
     }
-
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player")) playerInRange = false;
+
         if (other.CompareTag("Player") && currentNearbyButton == gameObject)
         {
             currentNearbyButton = null;
         }
-       
-
     }
-    */
 }

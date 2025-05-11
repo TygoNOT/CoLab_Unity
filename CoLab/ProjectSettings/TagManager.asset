@@ -9,6 +9,11 @@ TagManager:
   - ButtonTop
   - BottomButton
   - TrueButton
+  - Bullet
+  - Ladder
+  - DoorButton
+  - SymbolRotation
+  - SequenceCheckButton
   layers:
   - Default
   - TransparentFX

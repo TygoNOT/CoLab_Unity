@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 582743996399026358}
   - component: {fileID: 6387527904868058417}
   - component: {fileID: 5203349964238152761}
+  - component: {fileID: 7156373660364290351}
   - component: {fileID: 2654725986417907038}
   m_Layer: 0
   m_Name: Button
@@ -104,8 +105,29 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.90389943
-  m_Center: {x: 5.8015037e-10, y: 0, z: -0.5654642}
+  m_Radius: 1.4944595
+  m_Center: {x: 3.628135e-10, y: 0, z: -1.392299}
+--- !u!114 &7156373660364290351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7188883811018631781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1676790227
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &2654725986417907038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,6 +141,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInRange: 0
+  allMaterials: []
+  pressSound: {fileID: 8300000, guid: f31e5862702a85f459dbce1b825ab4dc, type: 3}
+  incorrectPressSound: {fileID: 8300000, guid: 8efa876dd75d0c24694cab9eb6226c70, type: 3}
+  buttonCube: {fileID: 3020950218628231906}
+  finish: {fileID: 0}
+  invisibleWall: {fileID: 0}
+  door1: {fileID: 0}
+  door2: {fileID: 0}
 --- !u!1 &8302662394409789332
 GameObject:
   m_ObjectHideFlags: 0
