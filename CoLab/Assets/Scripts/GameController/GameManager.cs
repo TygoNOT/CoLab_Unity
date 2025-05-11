@@ -77,7 +77,7 @@ public class GameManager : NetworkBehaviour
 
     private Vector3 GetSpawnPosition()
     {
-        return new Vector3(Random.Range(-2f, 2f), 1f, Random.Range(-2f, 2f));
+        return new Vector3(Random.Range(-5f, 5f), 1f, Random.Range(-5f, 5f));
     }
 
     public bool CheckButtonSequence(int buttonIndex)
