@@ -1,21 +1,23 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
-using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
-    public List<int> buttonSequence = new List<int>();  
-    public List<int> playerSequence = new List<int>();  
+
+    public List<int> buttonSequence = new List<int>();
+    public List<int> playerSequence = new List<int>();
     private int currentButtonIndex = 0;
 
     public GameObject objectToReveal;
 
     [Header("Teleport Settings")]
-    public bool teleportOnCorrectSequence = true; 
-    public Transform spawnCenter; 
-    public float spawnRadius = 5f;
+    public bool teleportOnCorrectSequence = true;
+
+    private List<Transform> spawnPoints = new List<Transform>();
 
     private void Awake()
     {
@@ -28,15 +30,14 @@ public class GameManager : NetworkBehaviour
 
     public void GenerateRandomSequence()
     {
-        buttonSequence.Clear();  
-
-        List<int> allButtons = new List<int> { 0, 1, 2, 3, 4, 5 };  
+        buttonSequence.Clear();
+        List<int> allButtons = new List<int> { 0, 1, 2, 3, 4, 5 };
 
         while (allButtons.Count > 0)
         {
-            int randomIndex = Random.Range(0, allButtons.Count);  
+            int randomIndex = Random.Range(0, allButtons.Count);
             buttonSequence.Add(allButtons[randomIndex]);
-            allButtons.RemoveAt(randomIndex); 
+            allButtons.RemoveAt(randomIndex);
         }
 
         Debug.Log("Generated Button Sequence: " + string.Join(", ", buttonSequence));
@@ -50,24 +51,34 @@ public class GameManager : NetworkBehaviour
 
         NetworkManager.SceneManager.OnSceneEvent += (sceneEvent) =>
         {
-            if (sceneEvent.SceneEventType == Unity.Netcode.SceneEventType.LoadComplete)
+            if (sceneEvent.SceneEventType == SceneEventType.LoadComplete)
             {
-                foreach (var clientId in clientIds)
+                LoadSpawnPoints();
+
+                for (int i = 0; i < clientIds.Length; i++)
                 {
+                    var clientId = clientIds[i];
+
                     if (NetworkManager.ConnectedClients.TryGetValue(clientId, out var client))
                     {
                         var playerObj = client.PlayerObject;
 
                         if (playerObj != null)
                         {
+                            Vector3 teleportPosition = spawnPoints.Count > i
+                                ? spawnPoints[i].position
+                                : GetSpawnPosition();
+
+                            // Телепортируем на сервере
                             var controller = playerObj.GetComponent<CharacterController>();
-                            if (controller != null)
-                                controller.enabled = false;
+                            if (controller != null) controller.enabled = false;
 
-                            playerObj.transform.position = GetSpawnPosition();
+                            playerObj.transform.position = teleportPosition;
 
-                            if (controller != null)
-                                controller.enabled = true;
+                            if (controller != null) controller.enabled = true;
+
+                            // Отправляем клиенту позицию
+                            TeleportClientRpc(teleportPosition, clientId);
                         }
                     }
                 }
@@ -77,7 +88,39 @@ public class GameManager : NetworkBehaviour
 
     private Vector3 GetSpawnPosition()
     {
-        return new Vector3(Random.Range(-5f, 5f), 1f, Random.Range(-5f, 5f));
+        return new Vector3(Random.Range(-2f, 2f), 1f, Random.Range(-2f, 2f));
+    }
+
+    [ClientRpc]
+    private void TeleportClientRpc(Vector3 position, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId != clientId)
+            return;
+
+        var player = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+        if (player != null)
+        {
+            var controller = player.GetComponent<CharacterController>();
+            if (controller != null) controller.enabled = false;
+
+            player.transform.position = position;
+
+            if (controller != null) controller.enabled = true;
+        }
+    }
+
+    private void LoadSpawnPoints()
+    {
+        spawnPoints.Clear();
+        var allPoints = GameObject.FindObjectsOfType<SpawnPoint>();
+        foreach (var point in allPoints)
+        {
+            spawnPoints.Add(point.transform);
+        }
+
+        spawnPoints = spawnPoints.OrderBy(p => p.GetComponent<SpawnPoint>().spawnIndex).ToList();
+
+        Debug.Log($"Loaded {spawnPoints.Count} spawn points");
     }
 
     public bool CheckButtonSequence(int buttonIndex)
@@ -110,33 +153,14 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void TeleportAllPlayersServerRpc()
     {
-        foreach (var clientPair in NetworkManager.ConnectedClients)
-        {
-            var clientId = clientPair.Key;
-            var playerObject = clientPair.Value.PlayerObject;
-
-            if (playerObject != null)
-            {
-                var controller = playerObject.GetComponent<CharacterController>();
-                if (controller != null)
-                    controller.enabled = false;
-
-                Vector3 teleportPosition = spawnCenter != null
-                    ? spawnCenter.position + new Vector3(Random.Range(-spawnRadius, spawnRadius), 0f, Random.Range(-spawnRadius, spawnRadius))
-                    : GetSpawnPosition(); 
-
-                playerObject.transform.position = teleportPosition;
-
-                if (controller != null)
-                    controller.enabled = true;
-            }
-        }
+        ulong[] allClients = NetworkManager.ConnectedClientsIds.ToArray();
+        TeleportPlayersToScene(allClients, SceneManager.GetActiveScene().name);
     }
 
     public void ResetButtonSequence()
     {
-        playerSequence.Clear();  
-        currentButtonIndex = 0;  
-        objectToReveal.SetActive(false);  
+        playerSequence.Clear();
+        currentButtonIndex = 0;
+        objectToReveal.SetActive(false);
     }
 }
