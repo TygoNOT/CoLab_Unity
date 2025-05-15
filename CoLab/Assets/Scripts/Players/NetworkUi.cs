@@ -11,15 +11,19 @@ public class NetworkUi : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI playersCountText;
     [SerializeField] private GameObject ButtonHolder;
     [SerializeField] private GameObject Players;
-
+    [SerializeField]  public TMP_InputField ipInputField;
+    [SerializeField]  public TMP_InputField portInputField;
     private NetworkVariable<int> playersNumber = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
 
-    // IP-адрес хоста в сети Radmin
-    private string hostIp = "26.187.193.230";
-    private ushort port = 7777;
 
     public void HostButtonClick()
     {
+        string ip = ipInputField.text;
+        ushort.TryParse(portInputField.text, out ushort customPort);
+
+        UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+        transport.SetConnectionData(ip, customPort);
+
         NetworkManager.Singleton.StartHost();
         ButtonHolder.SetActive(false);
         Players.SetActive(true);
@@ -27,9 +31,11 @@ public class NetworkUi : NetworkBehaviour
 
     public void ClientButtonClick()
     {
-        // Устанавливаем адрес подключения вручную
+        string ip = ipInputField.text;
+        ushort.TryParse(portInputField.text, out ushort customPort);
+
         UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        transport.SetConnectionData(hostIp, port);
+        transport.SetConnectionData(ip, customPort);
 
         NetworkManager.Singleton.StartClient();
         ButtonHolder.SetActive(false);
