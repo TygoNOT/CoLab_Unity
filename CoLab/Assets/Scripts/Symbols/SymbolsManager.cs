@@ -1,73 +1,177 @@
 using UnityEngine;
+using Unity.Netcode;
+using System.Collections;
+using Unity.Collections;
 
-public class SymbolsManager : MonoBehaviour
+public class SymbolsManager : NetworkBehaviour
 {
+    [Header("References")]
     [SerializeField] private Material[] materials;
     [SerializeField] private SymbolCube[] trueSymbols;
     [SerializeField] private SymbolCube[] changeableSymbols;
 
-    private Material[] correctSequence;
+    [Header("Sync")]
+    private NetworkList<int> correctIndexes;
+    private NetworkVariable<int> randomSeed = new NetworkVariable<int>();
+    private NetworkVariable<bool> isInitialized = new NetworkVariable<bool>(false);
 
-    void Start()
+    private void Awake()
     {
-        GenerateSequence();
-        ApplySequence();
+        correctIndexes = new NetworkList<int>();
     }
-    public bool IsSequenceCorrect()
+
+    public override void OnNetworkSpawn()
     {
+        if (IsServer)
+        {
+            InitializeServer();
+        }
+
+        randomSeed.OnValueChanged += OnSeedChanged;
+        isInitialized.OnValueChanged += OnInitializedChanged;
+
+        // Если данные уже пришли до подписки
+        if (isInitialized.Value)
+        {
+            InitializeClient();
+        }
+    }
+
+    private void InitializeServer()
+    {
+        // Генерируем seed только один раз
+        if (randomSeed.Value == 0)
+        {
+            randomSeed.Value = Random.Range(1, int.MaxValue);
+        }
+
+        // Генерируем последовательность
+        GenerateSequence(randomSeed.Value);
+        isInitialized.Value = true;
+    }
+
+    private void OnSeedChanged(int oldSeed, int newSeed)
+    {
+        if (!IsServer && newSeed != 0)
+        {
+            Random.InitState(newSeed);
+            GenerateSequence(newSeed);
+        }
+    }
+
+    private void OnInitializedChanged(bool oldValue, bool newValue)
+    {
+        if (newValue && !IsServer)
+        {
+            InitializeClient();
+        }
+    }
+
+    private void GenerateSequence(int seed)
+    {
+        Random.InitState(seed);
+        correctIndexes.Clear();
+
+        // Генерация правильной последовательности
+        for (int i = 0; i < trueSymbols.Length; i++)
+        {
+            correctIndexes.Add(Random.Range(0, materials.Length));
+        }
+    }
+
+    private void InitializeClient()
+    {
+        StartCoroutine(ClientInitializeRoutine());
+    }
+
+    private IEnumerator ClientInitializeRoutine()
+    {
+        // Ждем пока все NetworkVariables синхронизируются
+        yield return new WaitUntil(() => correctIndexes.Count == trueSymbols.Length);
+
+        ApplyMaterials();
+    }
+
+    private void ApplyMaterials()
+    {
+        // 1. Применяем правильные материалы
+        for (int i = 0; i < trueSymbols.Length; i++)
+        {
+            if (i < correctIndexes.Count)
+            {
+                Material mat = materials[correctIndexes[i]];
+                trueSymbols[i].SetAllMaterials(materials);
+                trueSymbols[i].SetSymbol(mat);
+                trueSymbols[i].SetCorrectMaterial(mat);
+            }
+        }
+
+        // 2. Перемешиваем и применяем к изменяемым символам
+        int[] shuffledIndexes = new int[correctIndexes.Count];
+        for (int i = 0; i < correctIndexes.Count; i++)
+        {
+            shuffledIndexes[i] = correctIndexes[i];
+        }
+
+        // Перемешиваем с тем же seed
+        Random.InitState(randomSeed.Value);
+        ShuffleArray(shuffledIndexes);
+
         for (int i = 0; i < changeableSymbols.Length; i++)
         {
-            // Логируем текущие индексы для проверки
-            int correctMaterialIndex = System.Array.IndexOf(materials, changeableSymbols[i].correctMaterial);
-            Debug.Log($"Символ {i}: {changeableSymbols[i].currentMaterialIndex} == {correctMaterialIndex}");
-
-            if (changeableSymbols[i].currentMaterialIndex != correctMaterialIndex)
-                return false;
+            if (i < shuffledIndexes.Length)
+            {
+                Material mat = materials[shuffledIndexes[i]];
+                Material correctMat = materials[correctIndexes[i]];
+                changeableSymbols[i].SetAllMaterials(materials);
+                changeableSymbols[i].SetSymbol(mat);
+                changeableSymbols[i].SetCorrectMaterial(correctMat);
+            }
         }
-        return true;
     }
-    void GenerateSequence()
+
+    private void ShuffleArray(int[] array)
     {
-        correctSequence = new Material[trueSymbols.Length];
-        for (int i = 0; i < correctSequence.Length; i++)
+        for (int i = array.Length - 1; i > 0; i--)
         {
-
-            int randomIndex = Random.Range(0, materials.Length);
-            correctSequence[i] = materials[randomIndex];
+            int j = Random.Range(0, i + 1);
+            (array[i], array[j]) = (array[j], array[i]);
         }
     }
+
     public Material[] GetMaterials()
     {
         return materials;
     }
-    void ApplySequence()
+    public bool IsSequenceCorrect()
     {
-        for (int i = 0; i < trueSymbols.Length; i++)
-        {
-            trueSymbols[i].SetAllMaterials(materials);
-            trueSymbols[i].SetSymbol(correctSequence[i]);
-            trueSymbols[i].SetCorrectMaterial(correctSequence[i]);
-        }
-
-        Material[] scrambledSequence = (Material[])correctSequence.Clone();
-        Shuffle(scrambledSequence);
-
+        // Проверяем, что все changeableSymbols имеют правильные материалы
         for (int i = 0; i < changeableSymbols.Length; i++)
         {
-            changeableSymbols[i].SetAllMaterials(materials);
-            changeableSymbols[i].SetSymbol(scrambledSequence[i]);
-            changeableSymbols[i].SetCorrectMaterial(correctSequence[i]);
-        }
-    }
+            if (changeableSymbols[i] == null)
+            {
+                Debug.LogError($"Changeable symbol {i} is null!");
+                return false;
+            }
 
-    void Shuffle(Material[] array)
-    {
-        for (int i = 0; i < array.Length; i++)
-        {
-            int rnd = Random.Range(i, array.Length);
-            Material temp = array[i];
-            array[i] = array[rnd];
-            array[rnd] = temp;
+            // Получаем текущий индекс материала
+            int currentIndex = changeableSymbols[i].currentMaterialIndex;
+
+            // Получаем правильный индекс из correctIndexes
+            if (i >= correctIndexes.Count)
+            {
+                Debug.LogError($"Index {i} out of correctIndexes range!");
+                return false;
+            }
+            int correctIndex = correctIndexes[i];
+
+            // Сравниваем индексы
+            if (currentIndex != correctIndex)
+            {
+                Debug.Log($"Symbol {i} is incorrect. Current: {currentIndex}, Expected: {correctIndex}");
+                return false;
+            }
         }
+        return true;
     }
 }

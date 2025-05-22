@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlatformForwardBackwardMover : MonoBehaviour
@@ -8,7 +9,7 @@ public class PlatformForwardBackwardMover : MonoBehaviour
     private Vector3 startPosition;
     private Vector3 forwardPosition;
     private bool movingForward = true;
-
+    private bool isPaused = false;
     private void Start()
     {
         startPosition = transform.position;
@@ -17,6 +18,7 @@ public class PlatformForwardBackwardMover : MonoBehaviour
 
     private void Update()
     {
+        if (isPaused) return;
         if (movingForward)
         {
             transform.position = Vector3.MoveTowards(transform.position, forwardPosition, moveSpeed * Time.deltaTime);
@@ -29,5 +31,16 @@ public class PlatformForwardBackwardMover : MonoBehaviour
             if (Vector3.Distance(transform.position, startPosition) < 0.01f)
                 movingForward = true;
         }
+    }
+    public void PauseMovement(float duration)
+    {
+        StartCoroutine(PauseCoroutine(duration));
+    }
+
+    private IEnumerator PauseCoroutine(float duration)
+    {
+        isPaused = true;
+        yield return new WaitForSeconds(duration);
+        isPaused = false;
     }
 }

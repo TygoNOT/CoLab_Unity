@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlatformBackAndForth : MonoBehaviour
@@ -8,6 +9,7 @@ public class PlatformBackAndForth : MonoBehaviour
     private Vector3 startPosition;
     private Vector3 targetPosition;
     private bool movingRight = true;
+    private bool isPaused = false;
 
     private void Start()
     {
@@ -17,6 +19,7 @@ public class PlatformBackAndForth : MonoBehaviour
 
     private void Update()
     {
+        if (isPaused) return;
         if (movingRight)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
@@ -29,5 +32,16 @@ public class PlatformBackAndForth : MonoBehaviour
             if (Vector3.Distance(transform.position, startPosition) < 0.01f)
                 movingRight = true;
         }
+    }
+    public void PauseMovement(float duration)
+    {
+        StartCoroutine(PauseCoroutine(duration));
+    }
+
+    private IEnumerator PauseCoroutine(float duration)
+    {
+        isPaused = true;
+        yield return new WaitForSeconds(duration);
+        isPaused = false;
     }
 }

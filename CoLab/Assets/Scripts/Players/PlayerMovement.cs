@@ -33,7 +33,7 @@ public class PlayerMovement : NetworkBehaviour
     bool isGrounded;
     float cameraCap;
     Vector2 currentMouseDelta, currentMouseDeltaVelocity, currentDir, currentDirVelocity, velocity;
-
+    private Vector3 externalVelocity = Vector3.zero;
     [Header("Reference")]
     CharacterController controller;
     [SerializeField] LayerMask ground;
@@ -122,11 +122,14 @@ public class PlayerMovement : NetworkBehaviour
 
         velocityY += gravity * 2f * Time.deltaTime;
 
-        Vector3 velocity = (transform.forward * currentDir.y + transform.right * currentDir.x) * Speed + Vector3.up * velocityY;
+        Vector3 inputMovement = (transform.forward * currentDir.y + transform.right * currentDir.x) * Speed;
+        Vector3 totalVelocity = inputMovement + externalVelocity + Vector3.up * velocityY;
 
-        controller.Move(velocity * Time.deltaTime);
+        controller.Move(totalVelocity * Time.deltaTime);
 
-        if (isGrounded && Input.GetButtonDown("Jump"))
+        externalVelocity = Vector3.Lerp(externalVelocity, Vector3.zero, 5f * Time.deltaTime);
+
+        if (isGrounded && Input.GetButton("Jump"))
         {
             float jumpPower = isCrouching ? crouchJumpHeight : jumpHeight;
             velocityY = Mathf.Sqrt(jumpPower * -2f * gravity);
@@ -263,5 +266,15 @@ public class PlayerMovement : NetworkBehaviour
             ApplyStun(duration);
         }
     }
-
+    [ClientRpc]
+    public void ApplyJumpPadClientRpc(Vector3 launchForce)
+    {
+        velocityY = launchForce.y;
+        externalVelocity = new Vector3(launchForce.x, 0f, launchForce.z);
+    }
+    [ServerRpc]
+    public void RequestJumpServerRpc(Vector3 launchForce)
+    {
+        ApplyJumpPadClientRpc(launchForce);
+    }
 }
