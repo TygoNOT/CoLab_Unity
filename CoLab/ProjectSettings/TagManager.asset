@@ -15,6 +15,14 @@ TagManager:
   - DoorButton
   - SymbolRotation
   - SequenceCheckButton
+  - StopMoveButton
+  - BestGame
+  - NotBest
+  - DoorButtonRand
+  - StopMoveButton2
+  - StopMoveButton3
+  - buttonParentTag
+  - ButtonGroup
   layers:
   - Default
   - TransparentFX

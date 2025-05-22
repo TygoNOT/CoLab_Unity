@@ -8,19 +8,19 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Artur/Multiplayer v2.unity
     guid: b6d5691b8e72d2d4c998a7fbcb2998c4
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Hub/Hub.unity
     guid: 065c52df92e9b014491607bcad349850
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Artur/Easy lvl 1.unity
     guid: f2920daf73903034293473ab81e35c85
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Artur/Easy lvl 2.unity
     guid: 02f2510358ce4244aa49bcdb1be7b168
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Artur/Easy lvl 3.unity
     guid: fa7397c16858faa45b2c2ab1e830a1fe
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Tygo/Level1_T.unity
     guid: 2fb7f86f0108c4d4aad083dd31454387
   - enabled: 1
@@ -29,21 +29,36 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Wadson/Level1_W.unity
     guid: 201d2ec5b084add4497ab0e7edf4dcd0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Wadson/Level2_W.unity
     guid: d8d863be4204de4438aab631a26b3d57
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Wadson/Level3_W.unity
     guid: e7cf1968ae2967b40af00297afaa50e2
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Tygo/Level3_T.unity
     guid: c12c1de88c4cb154397c183fc8cb07b8
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Tygo/Level2_T.unity
     guid: ecbc6496c86b54a4e9afacc740e479af
+  - enabled: 0
+    path: Assets/Scenes/Artur/Medium lvl 1.unity
+    guid: dc3cd1c3bb89e4d4990419e591b2543c
+  - enabled: 1
+    path: Assets/Scenes/Artur/Medium lvl 2.unity
+    guid: 52f46f0f29f88b341a3bb34913d7f441
+  - enabled: 0
+    path: Assets/Scenes/Artur/Medium lvl 3.unity
+    guid: f78f3d9f372e2ce4b85567cd95201534
+  - enabled: 0
+    path: Assets/Scenes/Artur/Hard lvl 1.unity
+    guid: b65940f04767aaf4fbbc04a32ab012b6
+  - enabled: 0
+    path: Assets/Scenes/Artur/Medium lvl 4.unity
+    guid: 7e8ca409fee04ea4e903b90843e50ac3
   - enabled: 1
     path: Assets/Scenes/Wadson/Level4_W.unity
     guid: ae0369a42d86e824c93495fbde4eb080
