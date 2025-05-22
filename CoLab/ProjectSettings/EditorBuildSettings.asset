@@ -47,4 +47,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Wadson/Level4_W.unity
     guid: ae0369a42d86e824c93495fbde4eb080
+    path: Assets/Scenes/Tygo/Level5_T.unity
+    guid: 66b546a5c22c670428bd6f3d53c30b65
+  - enabled: 1
+    path: Assets/Scenes/Tygo/Level4_T.unity
+    guid: ad9a11f9406477c44b482b7b6f4663b0
   m_configObjects: {}
