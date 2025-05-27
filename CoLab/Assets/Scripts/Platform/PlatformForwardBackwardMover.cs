@@ -1,7 +1,8 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlatformForwardBackwardMover : MonoBehaviour
+public class PlatformForwardBackwardMover : NetworkBehaviour
 {
     [Header("Attributes")]
     public float moveDistance = 5f;    

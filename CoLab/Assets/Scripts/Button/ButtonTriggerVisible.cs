@@ -17,12 +17,16 @@ public class ButtonTriggerVisible : NetworkBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
+
+        foreach (var obj in enableOnPress)
+        {
+            if (obj != null)
+                obj.SetActive(false);
+        }
     }
 
     private void Update()
     {
-        if (!IsOwner) return;
-
         if (playerInRange && Input.GetKeyDown(KeyCode.E))
         {
             PlayClickSound();
@@ -38,16 +42,12 @@ public class ButtonTriggerVisible : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!IsOwner) return;
-
         if (other.CompareTag("Player"))
             playerInRange = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (!IsOwner) return;
-
         if (other.CompareTag("Player"))
             playerInRange = false;
     }
