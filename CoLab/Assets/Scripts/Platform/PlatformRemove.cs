@@ -78,6 +78,7 @@ public class PlatformRemove : NetworkBehaviour
             symbolsManager = GameObject.FindObjectOfType<SymbolsManager>();
             allMaterials = symbolsManager.GetMaterials();
         }
+        if(topCube != null) topCube.SetActive(false);
     }
 
     void Update()
@@ -107,7 +108,7 @@ public class PlatformRemove : NetworkBehaviour
 
                 case "Button":
                     PlaySoundLocal(incorrectPressSound, 0.2f);
-                    playerInstance.GetComponent<NetworkObject>().GetComponent<PlayerMovement>().ApplyStunClientRpc(1f);
+                    playerInstance.GetComponent<NetworkObject>().GetComponent<PlayerMovement>().ApplyStunServerRpc(1f);
                     break;
 
                 case "DoorButton":
@@ -141,12 +142,12 @@ public class PlatformRemove : NetworkBehaviour
                     break;
 
                 case "StopMoveButton":
-                    StartCoroutine(CubeCoroutine(2f));
-                    platformMover.PauseMovement(2f);
+                    ActivateCubeServerRpc(2f);
+                    RequestPausePlatformServerRpc(2f);
                     break;
 
                 case "StopMoveButton3":
-                    platformForwardBackwardMover.PauseMovement(2f);
+                    RequestPauseForwardPlatformsServerRpc(2f);
                     PlaySoundLocal(pressSound);
                     break;
 
@@ -160,7 +161,7 @@ public class PlatformRemove : NetworkBehaviour
 
                 case "BestGame":
                     PlaySoundLocal(swagSound);
-                    door1.SetActive(false);
+                    RequestDestroyDoorServerRpc();
                     break;
             }
         }
@@ -190,6 +191,27 @@ public class PlatformRemove : NetworkBehaviour
         {
             platformDownNetObj.Despawn();
         }
+    }
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestPausePlatformServerRpc(float duration)
+    {
+        PausePlatformClientRpc(duration);
+    }
+
+    [ClientRpc]
+    private void PausePlatformClientRpc(float duration)
+    {
+        if (verticalMover != null) verticalMover.PauseMovement(duration);
+    }
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestPauseForwardPlatformsServerRpc(float duration)
+    {
+        PauseForwardPlatformsClientRpc(duration);
+    }
+    [ClientRpc]
+    private void PauseForwardPlatformsClientRpc(float duration)
+    {
+        if (platformForwardBackwardMover != null) platformForwardBackwardMover.PauseMovement(duration);
     }
     [ServerRpc(RequireOwnership = false)]
     private void RequestPauseAllPlatformsServerRpc(float duration)
@@ -306,6 +328,18 @@ public class PlatformRemove : NetworkBehaviour
                 currentNearbyButton = null;
             }
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ActivateCubeServerRpc(float duration)
+    {
+        ActivateCubeClientRpc(duration);
+    }
+
+    [ClientRpc]
+    public void ActivateCubeClientRpc(float duration)
+    {
+        StartCoroutine(CubeCoroutine(duration));
     }
 
     private IEnumerator CubeCoroutine(float duration)
