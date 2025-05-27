@@ -35,6 +35,7 @@ public class Button : NetworkBehaviour
     private void Update()
     {
         if (isPressed) return;
+        if (PlayerMovement.LocalInstance == null) return;
 
         if (Vector3.Distance(transform.position, PlayerMovement.LocalInstance.transform.position) <= interactRadius)
         {

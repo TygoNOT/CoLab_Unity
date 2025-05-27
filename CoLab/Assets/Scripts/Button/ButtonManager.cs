@@ -14,9 +14,11 @@ public class ButtonManager : NetworkBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            Debug.Log("[ButtonManager] Created");
         }
         else
         {
+            Debug.LogWarning("[ButtonManager] Duplicate detected and destroyed");
             Destroy(gameObject);
         }
     }
@@ -46,15 +48,6 @@ public class ButtonManager : NetworkBehaviour
             button.GetComponent<Renderer>().material.color = button.defaultColor;
         }
     }
-    public void AssignButtonIndicesFromServer(Dictionary<int, Button> indexToButton)
-    {
-        buttons.Clear();
-        foreach (var pair in indexToButton)
-        {
-            pair.Value.buttonIndex = pair.Key;
-            buttons.Add(pair.Value);
-        }
-    }
 
     public void ClearAndReassignButtons(Button[] newButtons)
     {
@@ -63,6 +56,16 @@ public class ButtonManager : NetworkBehaviour
         {
             newButtons[i].buttonIndex = i;
             buttons.Add(newButtons[i]);
+        }
+    }
+
+    public void AssignButtonIndicesFromServer(Dictionary<int, Button> indexToButton)
+    {
+        buttons.Clear();
+        foreach (var pair in indexToButton)
+        {
+            pair.Value.buttonIndex = pair.Key;
+            buttons.Add(pair.Value);
         }
     }
 }

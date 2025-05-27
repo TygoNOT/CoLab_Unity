@@ -2837,7 +2837,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1118771292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2871,6 +2871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2e21bc9371789948884b2acd69b1192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ObjectToReveal: 1
   buttonSequence: 
   playerSequence: 
   objectToReveal: {fileID: 0}
@@ -3687,7 +3688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e4f3c8181369a49bdc1eaebbd24ebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextSceneName: Easy lvl 1
+  nextSceneName: Level2_T
   playerCountText: {fileID: 165019312}
 --- !u!1 &1531842176
 GameObject:

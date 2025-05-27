@@ -23,7 +23,7 @@ public class GameManager : NetworkBehaviour
     {
         if (IsServer)
         {
-            NetworkManager.SceneManager.OnLoadComplete += OnLoadComplete;
+            UpdateButtonSequenceForCurrentScene();
         }
 
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -130,6 +130,12 @@ public class GameManager : NetworkBehaviour
     {
         var buttons = FindObjectsOfType<Button>();
 
+        if (ButtonManager.Instance == null)
+        {
+            Debug.LogError("ButtonManager.Instance is null — cannot assign buttons!");
+            return;
+        }
+
         // Назначаем индекс сервера
         ButtonManager.Instance.ClearAndReassignButtons(buttons);
 
@@ -213,7 +219,7 @@ public class GameManager : NetworkBehaviour
             {
                 if (objectToReveal != null)
                     objectToReveal.GetComponent<Renderer>().enabled = true;
-                
+
                 RevealObjectClientRpc();
 
                 if (teleportOnCorrectSequence)
