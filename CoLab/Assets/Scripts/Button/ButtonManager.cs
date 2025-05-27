@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ButtonManager : NetworkBehaviour
 {
-    public static ButtonManager Instance; 
+    public static ButtonManager Instance;
 
     private List<Button> buttons = new List<Button>();
 
@@ -13,11 +13,11 @@ public class ButtonManager : NetworkBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); 
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); 
+            Destroy(gameObject);
         }
     }
 
@@ -32,12 +32,37 @@ public class ButtonManager : NetworkBehaviour
         }
     }
 
-    public void ResetButtons()
+    public Button GetButtonByIndex(int index)
+    {
+        return buttons.Find(b => b.buttonIndex == index);
+    }
+
+    [ClientRpc]
+    public void ResetButtonsClientRpc()
     {
         foreach (var button in buttons)
         {
-            button.ResetPressed(); 
-            button.GetComponent<Renderer>().material.color = button.defaultColor;  
+            button.ResetPressed();
+            button.GetComponent<Renderer>().material.color = button.defaultColor;
+        }
+    }
+    public void AssignButtonIndicesFromServer(Dictionary<int, Button> indexToButton)
+    {
+        buttons.Clear();
+        foreach (var pair in indexToButton)
+        {
+            pair.Value.buttonIndex = pair.Key;
+            buttons.Add(pair.Value);
+        }
+    }
+
+    public void ClearAndReassignButtons(Button[] newButtons)
+    {
+        buttons.Clear();
+        for (int i = 0; i < newButtons.Length; i++)
+        {
+            newButtons[i].buttonIndex = i;
+            buttons.Add(newButtons[i]);
         }
     }
 }

@@ -748,7 +748,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 53.5
+      value: 53
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.z
@@ -786,6 +786,10 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 257724206
       objectReference: {fileID: 0}
+    - target: {fileID: 6806709226878869186, guid: 7752dead44a372b498bf837413673f81, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 538974487}
     - target: {fileID: 7441564065647281113, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_Name
       value: ButtonHolder_T  (4)
@@ -3495,6 +3499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2e21bc9371789948884b2acd69b1192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ObjectToReveal: 1
   buttonSequence: 
   playerSequence: 
   objectToReveal: {fileID: 1530379923}
@@ -4977,7 +4982,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5015,6 +5020,10 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 854821704
       objectReference: {fileID: 0}
+    - target: {fileID: 6806709226878869186, guid: 7752dead44a372b498bf837413673f81, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 538974487}
     - target: {fileID: 7441564065647281113, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_Name
       value: 'ButtonHolder_T '
@@ -6452,7 +6461,7 @@ Transform:
   m_GameObject: {fileID: 937841344}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 4, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8009,7 +8018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8047,6 +8056,10 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 3680006002
       objectReference: {fileID: 0}
+    - target: {fileID: 6806709226878869186, guid: 7752dead44a372b498bf837413673f81, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 538974487}
     - target: {fileID: 7441564065647281113, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_Name
       value: ButtonHolder_T  (1)
@@ -9110,7 +9123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9148,6 +9161,10 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 1737126275
       objectReference: {fileID: 0}
+    - target: {fileID: 6806709226878869186, guid: 7752dead44a372b498bf837413673f81, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 538974487}
     - target: {fileID: 7441564065647281113, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_Name
       value: ButtonHolder_T  (2)
@@ -10963,6 +10980,7 @@ GameObject:
   - component: {fileID: 1518101768}
   - component: {fileID: 1518101767}
   - component: {fileID: 1518101766}
+  - component: {fileID: 1518101770}
   - component: {fileID: 1518101769}
   m_Layer: 6
   m_Name: Platform Top
@@ -11071,6 +11089,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveDistance: 5
   moveSpeed: 4
+--- !u!114 &1518101770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518101763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3521579873
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1523881455
 GameObject:
   m_ObjectHideFlags: 0
@@ -11127,9 +11166,10 @@ GameObject:
   - component: {fileID: 1530379926}
   - component: {fileID: 1530379925}
   - component: {fileID: 1530379928}
+  - component: {fileID: 1530379929}
   m_Layer: 0
   m_Name: Finish
-  m_TagString: Untagged
+  m_TagString: RevealObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11143,8 +11183,8 @@ Transform:
   m_GameObject: {fileID: 1530379923}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15, y: -0.64, z: 0}
-  m_LocalScale: {x: 11, y: 1, z: 11.090797}
+  m_LocalPosition: {x: -12, y: -1, z: 67.903}
+  m_LocalScale: {x: 11, y: 1, z: 242.90436}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 430553427}
@@ -11232,8 +11272,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e4f3c8181369a49bdc1eaebbd24ebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextSceneName: 
+  nextSceneName: Level_2T
   playerCountText: {fileID: 0}
+--- !u!114 &1530379929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530379923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1718656963
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1531161878
 GameObject:
   m_ObjectHideFlags: 0
@@ -11417,6 +11478,7 @@ GameObject:
   - component: {fileID: 1569308559}
   - component: {fileID: 1569308558}
   - component: {fileID: 1569308557}
+  - component: {fileID: 1569308562}
   m_Layer: 0
   m_Name: SpawnPointCube
   m_TagString: Untagged
@@ -11523,6 +11585,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1569308562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1569308556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1713086491
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1573664168
 GameObject:
   m_ObjectHideFlags: 0
@@ -11639,6 +11722,7 @@ GameObject:
   - component: {fileID: 1593469757}
   - component: {fileID: 1593469760}
   - component: {fileID: 1593469759}
+  - component: {fileID: 1593469762}
   - component: {fileID: 1593469761}
   - component: {fileID: 1593469758}
   m_Layer: 6
@@ -11748,6 +11832,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveDistance: -34
   moveSpeed: 6
+--- !u!114 &1593469762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593469756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3889331626
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1603714017
 GameObject:
   m_ObjectHideFlags: 0
@@ -12115,7 +12220,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 53.5
+      value: 53
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.z
@@ -12153,6 +12258,10 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 1247886247
       objectReference: {fileID: 0}
+    - target: {fileID: 6806709226878869186, guid: 7752dead44a372b498bf837413673f81, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 538974487}
     - target: {fileID: 7441564065647281113, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_Name
       value: ButtonHolder_T  (5)
@@ -14601,7 +14710,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 53.5
+      value: 53
       objectReference: {fileID: 0}
     - target: {fileID: 236116379694444064, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_LocalPosition.z
@@ -14639,6 +14748,10 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 1865134307
       objectReference: {fileID: 0}
+    - target: {fileID: 6806709226878869186, guid: 7752dead44a372b498bf837413673f81, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 538974487}
     - target: {fileID: 7441564065647281113, guid: 7752dead44a372b498bf837413673f81, type: 3}
       propertyPath: m_Name
       value: ButtonHolder_T  (3)

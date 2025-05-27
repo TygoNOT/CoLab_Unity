@@ -4,19 +4,19 @@ using System.Collections;
 
 public class Button : NetworkBehaviour
 {
-    public int buttonIndex;  
+    public int buttonIndex;
     private Renderer buttonRenderer;
-    public bool isPressed = false;  
+    public bool isPressed = false;
 
     public Color correctColor = Color.green;
     public Color incorrectColor = Color.red;
     public Color defaultColor = Color.gray;
 
-    public Transform buttonCube;  
-    public AudioClip pressSound;  
-    private AudioSource audioSource;  
+    public Transform buttonCube;
+    public AudioClip pressSound;
+    private AudioSource audioSource;
     public AudioClip incorrectPressSound;
-    public float interactRadius = 2f; 
+    public float interactRadius = 2f;
 
     private void Start()
     {
@@ -26,66 +26,60 @@ public class Button : NetworkBehaviour
 
         audioSource = buttonCube.GetComponent<AudioSource>();
         if (audioSource == null)
-        {
             audioSource = buttonCube.gameObject.AddComponent<AudioSource>();
-        }
 
         if (pressSound != null)
-        {
             audioSource.clip = pressSound;
-        }
     }
 
     private void Update()
     {
-        if (IsOwner && !isPressed)
+        if (isPressed) return;
+
+        if (Vector3.Distance(transform.position, PlayerMovement.LocalInstance.transform.position) <= interactRadius)
         {
-            if (Vector3.Distance(transform.position, PlayerMovement.LocalInstance.transform.position) <= interactRadius)
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    PressButton();
-                }
+                CheckButtonRequestServerRpc(buttonIndex);
             }
         }
     }
 
-    public void PressButton()
+    [ServerRpc(RequireOwnership = false)]
+    private void CheckButtonRequestServerRpc(int index, ServerRpcParams rpcParams = default)
     {
-        bool isCorrect = GameManager.Instance.CheckButtonSequence(buttonIndex);
-        if (isCorrect)
+        GameManager gm = FindObjectOfType<GameManager>();
+        gm.CheckButtonServerRpc(index, rpcParams.Receive.SenderClientId);
+    }
+
+    public void SetState(bool correct)
+    {
+        if (correct)
         {
-            buttonRenderer.material.color = correctColor;
             isPressed = true;
+            buttonRenderer.material.color = correctColor;
         }
         else
         {
-            buttonRenderer.material.color = incorrectColor;
-            if (incorrectPressSound != null)
-            {
-                audioSource.clip = incorrectPressSound;  
-                audioSource.Play(); 
-            }
-            StartCoroutine(ResetButtonColor());
-            GameManager.Instance.ResetButtonSequence();
-            ButtonManager.Instance.ResetButtons();
+            StartCoroutine(ShowIncorrectFeedback());
         }
 
-        if (pressSound != null && isCorrect)
+        if (audioSource != null)
         {
-            audioSource.clip = pressSound;
+            audioSource.clip = correct ? pressSound : incorrectPressSound;
             audioSource.Play();
         }
     }
 
-    private IEnumerator ResetButtonColor()
+    private IEnumerator ShowIncorrectFeedback()
     {
+        buttonRenderer.material.color = incorrectColor;
         yield return new WaitForSeconds(1.5f);
-        buttonRenderer.material.color = defaultColor;  
-        ResetPressed();  
+        buttonRenderer.material.color = defaultColor;
+        ResetPressed();
     }
 
-    public void ResetPressed()  
+    public void ResetPressed()
     {
         isPressed = false;
     }
