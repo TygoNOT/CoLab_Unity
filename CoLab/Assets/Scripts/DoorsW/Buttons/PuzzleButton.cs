@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Unity.Netcode;
 
-public class PuzzleButton : MonoBehaviour
+public class PuzzleButton : NetworkBehaviour
 {
     [SerializeField] public Door linkedDoor;
     [SerializeField] public Renderer buttonRenderer;
@@ -27,10 +28,12 @@ public class PuzzleButton : MonoBehaviour
             playersOnButton++;
             if (playersOnButton == 1)
             {
-                if (linkedDoor != null)
+                Debug.Log($"[PuzzleButton] Player stepped on button '{gameObject.name}'. Correct: {isCorrectButton}");
+
+                if (isCorrectButton && linkedDoor != null)
                 {
                     linkedDoor.SetOpen(true);
-                }   
+                }
                 SetGlow(true);
             }
         }
@@ -43,7 +46,7 @@ public class PuzzleButton : MonoBehaviour
             playersOnButton--;
             if (playersOnButton <= 0)
             {
-                if (linkedDoor != null)
+                if (isCorrectButton && linkedDoor != null)
                 {
                     linkedDoor.SetOpen(false);
                 }
@@ -51,6 +54,7 @@ public class PuzzleButton : MonoBehaviour
             }
         }
     }
+
 
     private void SetGlow(bool active)
     {
@@ -62,9 +66,12 @@ public class PuzzleButton : MonoBehaviour
 
     public void SetAsCorrectButton(Door door)
     {
+        if (isCorrectButton) return; // Avoid setting twice
+
         linkedDoor = door;
         isCorrectButton = true;
         isActiveButton = true;
+        Debug.Log($"[PuzzleButton] {gameObject.name} marked as correct button. Door: {door?.gameObject.name}");
     }
 
 

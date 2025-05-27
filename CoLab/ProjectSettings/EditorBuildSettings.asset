@@ -59,10 +59,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Artur/Medium lvl 4.unity
     guid: 7e8ca409fee04ea4e903b90843e50ac3
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Wadson/Level4_W.unity
     guid: ae0369a42d86e824c93495fbde4eb080
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Tygo/Level4_T.unity
     guid: ad9a11f9406477c44b482b7b6f4663b0
   m_configObjects: {}
