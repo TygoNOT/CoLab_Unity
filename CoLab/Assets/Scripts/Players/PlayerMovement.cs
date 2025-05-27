@@ -258,6 +258,11 @@ public class PlayerMovement : NetworkBehaviour
         IsStunned = false;
     }
 
+    [ServerRpc]
+    public void ApplyStunServerRpc(float duration)
+    {
+        ApplyStunClientRpc(duration);
+    }
     [ClientRpc]
     public void ApplyStunClientRpc(float duration)
     {

@@ -79,26 +79,4 @@ public class SymbolCube : MonoBehaviour
         currentMaterialIndex = (currentMaterialIndex + 1) % allMaterials.Length;
         SetSymbol(allMaterials[currentMaterialIndex]);
     }
-
-#if UNITY_EDITOR
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            Debug.Log($"{gameObject.name}: Testing set first material with key T");
-            if (allMaterials != null && allMaterials.Length > 0)
-            {
-                SetSymbol(allMaterials[0]);
-            }
-            else if (fallbackMaterials != null && fallbackMaterials.Length > 0)
-            {
-                SetSymbol(fallbackMaterials[0]);
-            }
-            else
-            {
-                Debug.LogWarning("No allMaterials or fallbackMaterials set.");
-            }
-        }
-    }
-#endif
 }
