@@ -224,7 +224,6 @@ public class GameManager : NetworkBehaviour
 
                 if (teleportOnCorrectSequence)
                 {
-                    TeleportAllPlayersServerRpc();
                     RevealObjectClientRpc();
 
                 }
