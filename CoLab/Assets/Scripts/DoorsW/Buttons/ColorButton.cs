@@ -1,42 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 using static Colors;
 
 public class ColorButton : MonoBehaviour
 {
     public DoorColor buttonColor;
-    private bool isPressed;
-    private List<ColoredDoor> connectedDoors = new List<ColoredDoor>();
+    private List<ColoredDoor> linkedDoors = new();
+
+    public void RegisterDoor(ColoredDoor door)
+    {
+        if (!linkedDoors.Contains(door))
+            linkedDoors.Add(door);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
-        {
-            isPressed = true;
             ToggleDoors(true);
-        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
-        {
-            isPressed = false;
             ToggleDoors(false);
-        }
-    }
-
-    public void RegisterDoor(ColoredDoor door)
-    {
-        connectedDoors.Add(door);
     }
 
     private void ToggleDoors(bool open)
     {
-        foreach (var door in connectedDoors)
-        {
+        foreach (var door in linkedDoors)
             door.SetOpen(open);
-        }
     }
 }

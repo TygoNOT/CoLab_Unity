@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class Door : MonoBehaviour
+public class Door : NetworkBehaviour
 {
     [SerializeField] private GameObject solidPart;
     [SerializeField] private Collider doorCollider;

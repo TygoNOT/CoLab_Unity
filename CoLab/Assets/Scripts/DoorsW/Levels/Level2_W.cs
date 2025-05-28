@@ -1,59 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 using static Colors;
 
-public class Level2_W : MonoBehaviour
+public class PuzzleManager : MonoBehaviour
 {
-    public GameObject doorPrefab;
-    public Transform[] doorPositions;
-    public List<ColoredDoor> allDoors = new List<ColoredDoor>();
-    public ColorButton[] allButtons;
-    public Material[] doorMaterials;
-
-    [SerializeField] private DoorColorHider colorHider;
+    [Header("References")]
+    public ColoredDoor[] doorsInCorridor; // Pre-placed in the Inspector
+    public ColorButton[] buttons;         // Pre-placed buttons
+    public Collider hideTriggerZone;      // Trigger that hides door colors
+    public Material[] colorMaterials;     // Indexed by DoorColor enum
 
     private void Start()
     {
-        GenerateDoors();
-        ConnectDoorsToButtons();
-        if (colorHider != null)
+        AssignRandomColors();
+        ConnectButtons();
+        if (hideTriggerZone.TryGetComponent(out DoorColorHider hider))
+            hider.SetDoors(new List<ColoredDoor>(doorsInCorridor));
+    }
+
+    private void AssignRandomColors()
+    {
+        foreach (var door in doorsInCorridor)
         {
-            allDoors.RemoveAll(door => door == null);
-            colorHider.SetDoors(allDoors);
+            DoorColor randomColor = (DoorColor)Random.Range(0, colorMaterials.Length);
+            door.SetColor(randomColor, colorMaterials[(int)randomColor]);
         }
     }
 
-    void GenerateDoors()
+    private void ConnectButtons()
     {
-        foreach (Transform pos in doorPositions)
+        foreach (var button in buttons)
         {
-            GameObject doorObj = Instantiate(doorPrefab, pos.position, Quaternion.Euler(0, 90, 0));
-            ColoredDoor door = doorObj.GetComponent<ColoredDoor>();
-
-            DoorColor color = (DoorColor)Random.Range(0, System.Enum.GetValues(typeof(DoorColor)).Length);
-            door.doorColor = color;
-            doorObj.GetComponent<Renderer>().material = doorMaterials[(int)color];
-
-            allDoors.Add(door);
-        }
-
-        foreach (GameObject oldDoor in GameObject.FindGameObjectsWithTag("OldDoor"))
-        {
-            Destroy(oldDoor);
-        }
-    }
-
-    void ConnectDoorsToButtons()
-    {
-        foreach (ColorButton button in allButtons)
-        {
-            foreach (ColoredDoor door in allDoors)
+            foreach (var door in doorsInCorridor)
             {
                 if (door.doorColor == button.buttonColor)
-                {
                     button.RegisterDoor(door);
-                }
             }
         }
     }
