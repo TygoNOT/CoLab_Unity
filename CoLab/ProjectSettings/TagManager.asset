@@ -23,6 +23,7 @@ TagManager:
   - StopMoveButton3
   - buttonParentTag
   - ButtonGroup
+  - RevealObject
   layers:
   - Default
   - TransparentFX

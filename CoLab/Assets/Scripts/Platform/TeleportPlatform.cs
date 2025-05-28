@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Netcode;
+using JetBrains.Annotations;
 
 public class TeleportPlatform : NetworkBehaviour
 {
@@ -52,7 +53,8 @@ public class TeleportPlatform : NetworkBehaviour
     {
         if (playersOnPlatform.Count == 2)
         {
-            GameManager.Instance.TeleportPlayersToScene(playersOnPlatform.ToArray(), nextSceneName);
+            GameManager gm = FindObjectOfType<GameManager>();
+            gm.TeleportPlayersToScene(playersOnPlatform.ToArray(), nextSceneName);
             playersOnPlatform.Clear();
             playerCount.Value = 0;
         }

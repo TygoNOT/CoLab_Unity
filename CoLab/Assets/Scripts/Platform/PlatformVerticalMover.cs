@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using Unity.Netcode;
 
-public class PlatformVerticalMover : MonoBehaviour
+public class PlatformVerticalMover : NetworkBehaviour
 {
     [Header("Attributes")]
     public float moveDistance = 3f;
